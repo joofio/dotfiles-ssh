@@ -167,6 +167,75 @@ install_tmux() {
     log_success "tmux installed"
 }
 
+# Install btop (modern system monitor)
+install_btop() {
+    log_info "Installing btop..."
+    if command -v btop >/dev/null 2>&1; then
+        log_warning "btop is already installed"
+        return
+    fi
+    
+    # btop is available in Ubuntu 22.04+ repositories
+    if apt list btop 2>/dev/null | grep -q btop; then
+        sudo apt install -y btop
+    else
+        # Download from GitHub releases for older Ubuntu versions
+        BTOP_VERSION=$(curl -s https://api.github.com/repos/aristocratos/btop/releases/latest | grep -Po '"tag_name": "\K[^"]*')
+        wget -O /tmp/btop.tbz "https://github.com/aristocratos/btop/releases/download/${BTOP_VERSION}/btop-x86_64-linux-musl.tbz"
+        tar -xjf /tmp/btop.tbz -C /tmp
+        sudo cp /tmp/btop/bin/btop /usr/local/bin/
+        rm -rf /tmp/btop /tmp/btop.tbz
+    fi
+    log_success "btop installed"
+}
+
+# Install dust (modern du)
+install_dust() {
+    log_info "Installing dust..."
+    if command -v dust >/dev/null 2>&1; then
+        log_warning "dust is already installed"
+        return
+    fi
+    
+    DUST_VERSION=$(curl -s https://api.github.com/repos/bootandy/dust/releases/latest | grep -Po '"tag_name": "\K[^"]*')
+    wget -O /tmp/dust.tar.gz "https://github.com/bootandy/dust/releases/download/${DUST_VERSION}/dust-${DUST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+    tar -xzf /tmp/dust.tar.gz -C /tmp
+    sudo cp "/tmp/dust-${DUST_VERSION}-x86_64-unknown-linux-musl/dust" /usr/local/bin/
+    rm -rf /tmp/dust* 
+    log_success "dust installed"
+}
+
+# Install procs (modern ps)
+install_procs() {
+    log_info "Installing procs..."
+    if command -v procs >/dev/null 2>&1; then
+        log_warning "procs is already installed"
+        return
+    fi
+    
+    PROCS_VERSION=$(curl -s https://api.github.com/repos/dalance/procs/releases/latest | grep -Po '"tag_name": "\K[^"]*')
+    wget -O /tmp/procs.zip "https://github.com/dalance/procs/releases/download/${PROCS_VERSION}/procs-${PROCS_VERSION}-x86_64-linux.zip"
+    unzip -q /tmp/procs.zip -d /tmp
+    sudo cp /tmp/procs /usr/local/bin/
+    rm -rf /tmp/procs*
+    log_success "procs installed"
+}
+
+# Install delta (better git diff)
+install_delta() {
+    log_info "Installing delta..."
+    if command -v delta >/dev/null 2>&1; then
+        log_warning "delta is already installed"
+        return
+    fi
+    
+    DELTA_VERSION=$(curl -s https://api.github.com/repos/dandavison/delta/releases/latest | grep -Po '"tag_name": "\K[^"]*')
+    wget -O /tmp/delta.deb "https://github.com/dandavison/delta/releases/download/${DELTA_VERSION}/git-delta_${DELTA_VERSION}_amd64.deb"
+    sudo dpkg -i /tmp/delta.deb || sudo apt install -f -y
+    rm /tmp/delta.deb
+    log_success "delta installed"
+}
+
 # Install additional useful tools
 install_additional_tools() {
     log_info "Installing additional useful tools..."
@@ -178,7 +247,21 @@ install_additional_tools() {
         tldr \
         neofetch \
         vim \
-        nano
+        nano \
+        curl \
+        wget \
+        rsync \
+        screen \
+        zip \
+        unzip \
+        p7zip-full \
+        net-tools \
+        dnsutils \
+        traceroute \
+        iotop \
+        lsof \
+        strace \
+        tcpdump
     log_success "Additional tools installed"
 }
 
@@ -252,6 +335,10 @@ main() {
     install_starship
     install_atuin
     install_tmux
+    install_btop
+    install_dust
+    install_procs
+    install_delta
     install_additional_tools
     
     setup_dotfiles
