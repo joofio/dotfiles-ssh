@@ -1,0 +1,89 @@
+# Starship prompt configuration
+
+format = """
+[┌───────────────────────────────────────────────────────────────────>](bold green)
+[│](bold green)$os$username$hostname$directory$git_branch$git_status$python$nodejs$rust$golang$java
+[└─>](bold green) $character"""
+
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+# OS symbol
+[os]
+disabled = false
+format = "[$symbol](bold white) "
+
+[os.symbols]
+Ubuntu = "🐧"
+Linux = "🐧"
+
+# Username
+[username]
+style_user = "bold yellow"
+style_root = "bold red"
+format = "[$user]($style) "
+disabled = false
+show_always = true
+
+# Hostname
+[hostname]
+ssh_only = true
+format = "on [$hostname](bold blue) "
+disabled = false
+
+# Directory
+[directory]
+style = "bold cyan"
+format = "in [$path]($style)[$read_only]($read_only_style) "
+truncation_length = 3
+truncate_to_repo = true
+
+# Git branch
+[git_branch]
+format = "on [$symbol$branch]($style) "
+style = "bold purple"
+
+# Git status
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = "bold red"
+
+# Character
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vicmd_symbol = "[❮](bold yellow)"
+
+# Programming languages
+[python]
+format = "via [${symbol}${pyenv_prefix}(${version} )(\\($virtualenv\\) )]($style)"
+style = "bold yellow"
+
+[nodejs]
+format = "via [$symbol($version )]($style)"
+style = "bold green"
+
+[rust]
+format = "via [$symbol($version )]($style)"
+style = "bold red"
+
+[golang]
+format = "via [$symbol($version )]($style)"
+style = "bold cyan"
+
+[java]
+format = "via [$symbol($version )]($style)"
+style = "bold orange"
+
+# Time
+[time]
+disabled = true
+format = '🕙[\[ $time \]]($style) '
+time_format = "%T"
+utc_time_offset = "local"
+
+# Command duration
+[cmd_duration]
+format = "took [$duration]($style) "
+min_time = 2000
+style = "bold yellow"
