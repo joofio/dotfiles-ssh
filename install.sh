@@ -240,18 +240,18 @@ install_delta() {
 install_additional_tools() {
     log_info "Installing additional useful tools..."
     sudo apt install -y \
-        htop \
+    
         tree \
         jq \
         ncdu \
         tldr \
         neofetch \
-        vim \
-        nano \
+        nvim \
+    
         curl \
         wget \
-        rsync \
-        screen \
+        
+        
         zip \
         unzip \
         p7zip-full \
