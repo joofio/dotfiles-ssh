@@ -297,90 +297,45 @@ install_additional_tools() {
         iotop \
         lsof \
         strace \
-        tcpdump
+        tcpdump \
+        stow
     log_success "Additional tools installed"
 }
 
 # Setup dotfiles
 setup_dotfiles() {
-    log_info "Setting up dotfiles..."
+    log_info "Setting up dotfiles using stow..."
     
     # Get the directory where this script is located
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    DOTFILES_DIR="$SCRIPT_DIR/dotfiles"
     
-    # Backup existing files function
-    backup_file() {
-        if [ -f "$1" ]; then
-            cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"
-            log_info "Backed up existing $1"
-        fi
+    # Check if stow is available
+    if ! command -v stow >/dev/null 2>&1; then
+        log_error "GNU Stow is not installed. Please install it first."
+        exit 1
+    fi
+    
+    # Change to dotfiles directory
+    cd "$DOTFILES_DIR" || {
+        log_error "Could not change to dotfiles directory: $DOTFILES_DIR"
+        exit 1
     }
     
-    # Copy dotfiles with backup
-    if [ -f "$SCRIPT_DIR/dotfiles/.bashrc" ]; then
-        backup_file ~/.bashrc
-        cp "$SCRIPT_DIR/dotfiles/.bashrc" ~/.bashrc
-        log_success ".bashrc configured"
-    fi
+    # Stow all packages
+    for package in */; do
+        package_name=${package%/}
+        log_info "Stowing package: $package_name"
+        
+        # Remove trailing slash and stow the package
+        if stow -v "$package_name" -t "$HOME"; then
+            log_success "Successfully stowed $package_name"
+        else
+            log_warning "Failed to stow $package_name (conflicts may exist)"
+        fi
+    done
     
-    if [ -f "$SCRIPT_DIR/dotfiles/.zshrc" ]; then
-        backup_file ~/.zshrc
-        cp "$SCRIPT_DIR/dotfiles/.zshrc" ~/.zshrc
-        log_success ".zshrc configured"
-    fi
-    
-    if [ -f "$SCRIPT_DIR/dotfiles/.gitconfig" ]; then
-        backup_file ~/.gitconfig
-        cp "$SCRIPT_DIR/dotfiles/.gitconfig" ~/.gitconfig
-        log_success ".gitconfig configured"
-    fi
-    
-    if [ -f "$SCRIPT_DIR/dotfiles/.gitignore_global" ]; then
-        backup_file ~/.gitignore_global
-        cp "$SCRIPT_DIR/dotfiles/.gitignore_global" ~/.gitignore_global
-        log_success ".gitignore_global configured"
-    fi
-    
-    if [ -f "$SCRIPT_DIR/dotfiles/.tmux.conf" ]; then
-        backup_file ~/.tmux.conf
-        cp "$SCRIPT_DIR/dotfiles/.tmux.conf" ~/.tmux.conf
-        log_success ".tmux.conf configured"
-    fi
-    
-    if [ -f "$SCRIPT_DIR/dotfiles/starship.toml" ]; then
-        mkdir -p ~/.config
-        backup_file ~/.config/starship.toml
-        cp "$SCRIPT_DIR/dotfiles/starship.toml" ~/.config/starship.toml
-        log_success "starship.toml configured"
-    fi
-    
-    if [ -f "$SCRIPT_DIR/dotfiles/fzf-config.sh" ]; then
-        mkdir -p ~/.config
-        backup_file ~/.config/fzf-config.sh
-        cp "$SCRIPT_DIR/dotfiles/fzf-config.sh" ~/.config/fzf-config.sh
-        log_success "fzf-config.sh configured"
-    fi
-    
-    if [ -f "$SCRIPT_DIR/dotfiles/atuin-config.toml" ]; then
-        mkdir -p ~/.config/atuin
-        backup_file ~/.config/atuin/config.toml
-        cp "$SCRIPT_DIR/dotfiles/atuin-config.toml" ~/.config/atuin/config.toml
-        log_success "atuin config.toml configured"
-    fi
-    
-    if [ -f "$SCRIPT_DIR/dotfiles/lazygit-config.yml" ]; then
-        mkdir -p ~/.config/lazygit
-        backup_file ~/.config/lazygit/config.yml
-        cp "$SCRIPT_DIR/dotfiles/lazygit-config.yml" ~/.config/lazygit/config.yml
-        log_success "lazygit config.yml configured"
-    fi
-    
-    if [ -f "$SCRIPT_DIR/dotfiles/lazydocker-config.yml" ]; then
-        mkdir -p ~/.config/lazydocker
-        backup_file ~/.config/lazydocker/config.yml
-        cp "$SCRIPT_DIR/dotfiles/lazydocker-config.yml" ~/.config/lazydocker/config.yml
-        log_success "lazydocker config.yml configured"
-    fi
+    log_success "Dotfiles setup with stow completed"
 }
 
 # Main installation function
