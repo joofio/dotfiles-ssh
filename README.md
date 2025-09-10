@@ -20,7 +20,13 @@ This repository provides:
 - **[ripgrep (rg)](https://github.com/BurntSushi/ripgrep)** - A line-oriented search tool that recursively searches directories
 - **[zoxide](https://github.com/ajeetdsouza/zoxide)** - A smarter cd command, inspired by z and autojump
 - **[starship](https://github.com/starship/starship)** - A minimal, blazing-fast, and infinitely customizable prompt
-- **[atuin](https://github.com/ellie/atuin)** - Magical shell history with sync capabilities
+- **[atuin](https://github.com/ellie/atuin)** - Magical shell history (configured without sync)
+- **[fzf](https://github.com/junegunn/fzf)** - A command-line fuzzy finder
+- **[delta](https://github.com/dandavison/delta)** - A syntax-highlighting pager for git and diff output
+
+### Git and Docker Management
+- **[lazygit](https://github.com/jesseduffield/lazygit)** - Simple terminal UI for git commands
+- **[lazydocker](https://github.com/jesseduffield/lazydocker)** - The lazier way to manage everything docker
 
 ### Additional Tools
 - **tmux** - Terminal multiplexer for managing multiple terminal sessions
@@ -81,10 +87,14 @@ The script will install the following tools and their dependencies:
 The following dotfiles will be copied to your home directory:
 - `~/.bashrc` - Enhanced bash configuration with aliases and functions
 - `~/.zshrc` - Enhanced zsh configuration with aliases and functions
-- `~/.gitconfig` - Git configuration with useful aliases and settings
+- `~/.gitconfig` - Git configuration with useful aliases and enhanced delta settings
 - `~/.tmux.conf` - Tmux configuration for better terminal management
 - `~/.config/starship.toml` - Starship prompt configuration
 - `~/.gitignore_global` - Global gitignore patterns
+- `~/.config/atuin/config.toml` - Atuin configuration with sync disabled
+- `~/.config/fzf-config.sh` - FZF fuzzy finder configuration
+- `~/.config/lazygit/config.yml` - Lazygit TUI configuration
+- `~/.config/lazydocker/config.yml` - Lazydocker TUI configuration
 
 ## Configuration Details
 
@@ -95,10 +105,29 @@ The following dotfiles will be copied to your home directory:
 - **Path**: Automatically adds `~/.local/bin` and `~/.cargo/bin` to PATH
 
 ### Git Configuration
+- **Delta Integration**: Advanced diff visualization with syntax highlighting
 - **Aliases**: Shortcuts for common git commands
 - **Colors**: Colorized output for better readability
 - **Default branch**: Set to `main`
 - **Auto-setup**: Automatic remote tracking branch setup
+
+### FZF Configuration
+- **Modern Finder**: Fuzzy file finding with fd integration
+- **Preview Support**: File preview with bat and directory preview with tree
+- **Custom Key Bindings**: Enhanced navigation and selection
+- **Color Scheme**: Consistent theming with other tools
+
+### Docker Management
+- **Lazydocker**: Visual container management with custom keybindings
+- **Lazygit**: Git repository management with advanced TUI
+- **Docker Aliases**: Quick shortcuts for common docker commands
+- **Compose Integration**: Docker-compose workflow shortcuts
+
+### Atuin Setup
+- **Local History**: Enhanced shell history without cloud sync
+- **Smart Search**: Fuzzy searching through command history
+- **Privacy First**: No data sent to external servers
+- **Cross-shell**: Works with both bash and zsh
 
 ### Tmux Configuration
 - **Prefix**: Changed to `Ctrl-a` for easier access
@@ -122,10 +151,33 @@ git config --global user.email "your.email@example.com"
 ```
 
 ### Atuin Setup
-If you want to sync shell history across machines:
+Atuin is configured for local use only (no sync):
 ```bash
-atuin register
-atuin login
+# History is stored locally in ~/.local/share/atuin/history.db
+# Use Ctrl+R to search through history with fuzzy matching
+# Use arrow keys to navigate, enter to select
+```
+
+### Docker Management Tools
+Access powerful TUI tools for Docker management:
+```bash
+# Launch lazydocker for container management
+lazydocker
+# or use the alias
+lzd
+
+# Launch lazygit for git repository management  
+lazygit
+# or use the alias
+lg
+```
+
+### FZF Integration
+Enhanced file finding with fuzzy search:
+```bash
+# Use Ctrl+T to fuzzy find files
+# Use Alt+C to fuzzy find directories
+# Use Ctrl+R for enhanced history search (if atuin not available)
 ```
 
 ## Post-Installation

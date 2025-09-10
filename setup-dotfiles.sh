@@ -47,7 +47,14 @@ copy_dotfile "$DOTFILES_DIR/.gitignore_global" "$HOME/.gitignore_global"
 
 # Create .config directory if it doesn't exist
 mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.config/atuin"
+mkdir -p "$HOME/.config/lazygit"
+mkdir -p "$HOME/.config/lazydocker"
 copy_dotfile "$DOTFILES_DIR/starship.toml" "$HOME/.config/starship.toml"
+copy_dotfile "$DOTFILES_DIR/fzf-config.sh" "$HOME/.config/fzf-config.sh"
+copy_dotfile "$DOTFILES_DIR/atuin-config.toml" "$HOME/.config/atuin/config.toml"
+copy_dotfile "$DOTFILES_DIR/lazygit-config.yml" "$HOME/.config/lazygit/config.yml"
+copy_dotfile "$DOTFILES_DIR/lazydocker-config.yml" "$HOME/.config/lazydocker/config.yml"
 
 echo -e "${GREEN}✓ Dotfiles setup complete!${NC}"
 echo -e "${BLUE}Remember to:${NC}"

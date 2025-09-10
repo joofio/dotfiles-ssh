@@ -236,22 +236,58 @@ install_delta() {
     log_success "delta installed"
 }
 
+# Install fzf (fuzzy finder)
+install_fzf() {
+    log_info "Installing fzf..."
+    if command -v fzf >/dev/null 2>&1; then
+        log_warning "fzf is already installed"
+        return
+    fi
+    
+    sudo apt install -y fzf
+    log_success "fzf installed"
+}
+
+# Install lazygit (git TUI)
+install_lazygit() {
+    log_info "Installing lazygit..."
+    if command -v lazygit >/dev/null 2>&1; then
+        log_warning "lazygit is already installed"
+        return
+    fi
+    
+    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+    tar xf lazygit.tar.gz lazygit
+    sudo install lazygit /usr/local/bin
+    rm lazygit lazygit.tar.gz
+    log_success "lazygit installed"
+}
+
+# Install lazydocker (docker TUI)
+install_lazydocker() {
+    log_info "Installing lazydocker..."
+    if command -v lazydocker >/dev/null 2>&1; then
+        log_warning "lazydocker is already installed"
+        return
+    fi
+    
+    curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+    log_success "lazydocker installed"
+}
+
 # Install additional useful tools
 install_additional_tools() {
     log_info "Installing additional useful tools..."
     sudo apt install -y \
-    
         tree \
         jq \
         ncdu \
         tldr \
         neofetch \
         nvim \
-    
         curl \
         wget \
-        
-        
         zip \
         unzip \
         p7zip-full \
@@ -317,6 +353,34 @@ setup_dotfiles() {
         cp "$SCRIPT_DIR/dotfiles/starship.toml" ~/.config/starship.toml
         log_success "starship.toml configured"
     fi
+    
+    if [ -f "$SCRIPT_DIR/dotfiles/fzf-config.sh" ]; then
+        mkdir -p ~/.config
+        backup_file ~/.config/fzf-config.sh
+        cp "$SCRIPT_DIR/dotfiles/fzf-config.sh" ~/.config/fzf-config.sh
+        log_success "fzf-config.sh configured"
+    fi
+    
+    if [ -f "$SCRIPT_DIR/dotfiles/atuin-config.toml" ]; then
+        mkdir -p ~/.config/atuin
+        backup_file ~/.config/atuin/config.toml
+        cp "$SCRIPT_DIR/dotfiles/atuin-config.toml" ~/.config/atuin/config.toml
+        log_success "atuin config.toml configured"
+    fi
+    
+    if [ -f "$SCRIPT_DIR/dotfiles/lazygit-config.yml" ]; then
+        mkdir -p ~/.config/lazygit
+        backup_file ~/.config/lazygit/config.yml
+        cp "$SCRIPT_DIR/dotfiles/lazygit-config.yml" ~/.config/lazygit/config.yml
+        log_success "lazygit config.yml configured"
+    fi
+    
+    if [ -f "$SCRIPT_DIR/dotfiles/lazydocker-config.yml" ]; then
+        mkdir -p ~/.config/lazydocker
+        backup_file ~/.config/lazydocker/config.yml
+        cp "$SCRIPT_DIR/dotfiles/lazydocker-config.yml" ~/.config/lazydocker/config.yml
+        log_success "lazydocker config.yml configured"
+    fi
 }
 
 # Main installation function
@@ -339,6 +403,9 @@ main() {
     install_dust
     install_procs
     install_delta
+    install_fzf
+    install_lazygit
+    install_lazydocker
     install_additional_tools
     
     setup_dotfiles

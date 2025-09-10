@@ -1,0 +1,148 @@
+gui:
+  scrollHeight: 2
+  language: 'auto' # one of 'auto', 'en', 'pl', 'nl', 'de', 'tr'
+  theme:
+    activeBorderColor:
+      - green
+      - bold
+    inactiveBorderColor:
+      - white
+    optionsTextColor:
+      - blue
+    selectedLineBgColor:
+      - blue
+    selectedRangeBgColor:
+      - blue
+  returnImmediately: false
+  wrapMainPanel: true
+
+reporting: 'undetermined' # one of: 'on' | 'off' | 'undetermined'
+
+confirmationPrompt: true
+
+# Determines whether hitting 'esc' will quit the application when there is nothing to cancel/close
+quitOnTopLevelReturn: false
+
+# Key mappings
+keybinding:
+  quit: 'q'
+  quit-alt1: '<c-c>' 
+  return: '<esc>'
+  togglePanel: '<tab>'
+  prevItem: '<up>'
+  nextItem: '<down>'
+  prevItem-alt: 'k'
+  nextItem-alt: 'j'
+  prevPage: ','
+  nextPage: '.'
+  gotoTop: '<'
+  gotoBottom: '>'
+  prevBlock: '<left>'
+  nextBlock: '<right>'
+  prevBlock-alt: 'h'
+  nextBlock-alt: 'l'
+  nextMatch: 'n'
+  prevMatch: 'N'
+  startSearch: '/'
+  optionMenu: 'x'
+  optionMenu-alt1: '?'
+  forceRerender: '<c-r>'
+  openConfig: 'o'
+  editConfig: 'e'
+  scrollLeft: 'H'
+  scrollRight: 'L'
+  openFile: 'o'
+
+logs:
+  timestamps: false
+  since: '60m' # set to '' to show all logs
+  tail: '' # set to 200 to see last 200 lines of logs
+
+commandTemplates:
+  dockerCompose: docker-compose
+  restartService: '{{ .DockerCompose }} restart {{ .Service.Name }}'
+  up:  '{{ .DockerCompose }} up -d'
+  down: '{{ .DockerCompose }} down'
+  downWithVolumes: '{{ .DockerCompose }} down --volumes'
+  upService:  '{{ .DockerCompose }} up -d {{ .Service.Name }}'
+  startService: '{{ .DockerCompose }} start {{ .Service.Name }}'
+  stopService: '{{ .DockerCompose }} stop {{ .Service.Name }}'
+  serviceLogs: '{{ .DockerCompose }} logs --since=60m --follow {{ .Service.Name }}'
+  viewServiceLogs: '{{ .DockerCompose }} logs --since=60m {{ .Service.Name }}'
+  rebuildService: '{{ .DockerCompose }} up -d --build {{ .Service.Name }}'
+  recreateService: '{{ .DockerCompose }} up -d --force-recreate {{ .Service.Name }}'
+  allLogs: '{{ .DockerCompose }} logs --tail=300 --follow'
+  viewAlLogs: '{{ .DockerCompose }} logs'
+  dockerComposeConfig: '{{ .DockerCompose }} config'
+  checkDockerComposeConfig: '{{ .DockerCompose }} config --quiet'
+  serviceTop: '{{ .DockerCompose }} top {{ .Service.Name }}'
+
+containers:
+  # Container status colors
+  runningText: 'running'
+  runningColor: 'green'
+  pausedText: 'paused'
+  pausedColor: 'yellow'  
+  restartingText: 'restarting'
+  restartingColor: 'blue'
+  exitedText: 'exited'
+  exitedColor: 'red'
+  createdText: 'created'
+  createdColor: 'white'
+  deadText: 'dead'
+  deadColor: 'red'
+
+services:
+  # Service status colors  
+  runningText: 'running'
+  runningColor: 'green'
+  stoppedText: 'stopped'
+  stoppedColor: 'red'
+
+# OS command to open links and files
+os:
+  openCommand: open {{filename}}
+  openLinkCommand: open {{link}}
+
+customCommands:
+  containers:
+    - name: bash
+      attach: true
+      command: 'docker exec -it {{ .Container.Name }} /bin/bash'
+      serviceNames: []
+    - name: sh  
+      attach: true
+      command: 'docker exec -it {{ .Container.Name }} /bin/sh'
+      serviceNames: []
+    - name: inspect
+      attach: false
+      command: 'docker inspect {{ .Container.Name }}'
+      serviceNames: []
+  services:
+    - name: bash
+      attach: true
+      command: 'docker-compose exec {{ .Service.Name }} /bin/bash'
+      serviceNames: []
+    - name: sh
+      attach: true  
+      command: 'docker-compose exec {{ .Service.Name }} /bin/sh'
+      serviceNames: []
+  images:
+    - name: inspect
+      attach: false
+      command: 'docker inspect {{ .Image.Name }}'
+      serviceNames: []
+
+# Default bulk commands for containers
+bulkCommands:
+  containers:
+    - name: stop
+      command: 'docker stop {{ .Container.ID }}'
+    - name: restart
+      command: 'docker restart {{ .Container.ID }}'
+    - name: pause
+      command: 'docker pause {{ .Container.ID }}'
+    - name: unpause  
+      command: 'docker unpause {{ .Container.ID }}'
+    - name: remove
+      command: 'docker rm {{ .Container.ID }}'
