@@ -25,49 +25,33 @@ setopt CORRECT
 # Enable colors
 autoload -U colors && colors
 
-# Some useful aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
 
 # Modern tool aliases
-if command -v eza >/dev/null 2>&1; then
-    alias ls='eza --color=auto'
+    #alias ls='eza --color=auto'
+    alias ls="eza --long --color=always --icons=always --no-user -a -T -R -L=1" 
+
     alias ll='eza -la --color=auto --icons'
     alias la='eza -la --color=auto --icons'
     alias lt='eza --tree --color=auto --icons'
     alias l='eza -la --color=auto --icons'
-fi
 
-if command -v bat >/dev/null 2>&1; then
-    alias cat='bat --paging=never'
+    alias cat='batcat --paging=never'
     alias ccat='command cat'  # Original cat command
-    alias less='bat --paging=always'
-fi
+    alias less='batcat --paging=always'
 
-if command -v fd >/dev/null 2>&1; then
     alias find='fd'
-fi
 
-if command -v rg >/dev/null 2>&1; then
     alias grep='rg'
     alias rgrep='rg'
-fi
 
-if command -v btop >/dev/null 2>&1; then
     alias top='btop'
     alias htop='btop'
-fi
 
-if command -v dust >/dev/null 2>&1; then
     alias du='dust'
     alias ddu='command du'  # Original du command
-fi
 
-if command -v procs >/dev/null 2>&1; then
     alias ps='procs'
     alias pps='command ps'  # Original ps command
-fi
 
 # Directory navigation aliases
 alias ..='cd ..'
@@ -148,7 +132,6 @@ alias gclean='git clean -fd'
 alias greset='git reset --hard HEAD'
 
 # Docker aliases (if docker is available)
-if command -v docker >/dev/null 2>&1; then
     alias dps='docker ps'
     alias dpsa='docker ps -a'
     alias di='docker images'
@@ -161,26 +144,19 @@ if command -v docker >/dev/null 2>&1; then
     alias drmi='docker rmi'
     alias dprune='docker system prune -a'
     alias dstats='docker stats'
-fi
 
 # Docker Compose aliases (if docker-compose is available)
-if command -v docker-compose >/dev/null 2>&1; then
     alias dcu='docker-compose up'
     alias dcd='docker-compose down'
     alias dcb='docker-compose build'
     alias dcl='docker-compose logs'
     alias dcr='docker-compose restart'
-fi
 
 # Lazydocker alias (if lazydocker is available)
-if command -v lazydocker >/dev/null 2>&1; then
     alias lzd='lazydocker'
-fi
 
 # Lazygit alias (if lazygit is available)
-if command -v lazygit >/dev/null 2>&1; then
-    alias lg='lazygit'
-fi
+    alias lzg='lazygit'
 
 # Safety aliases
 alias rm='rm -i'
@@ -247,9 +223,7 @@ if command -v starship >/dev/null 2>&1; then
 fi
 
 # Initialize atuin if available
-if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init zsh)"
-fi
 
 # Source fzf configuration if available
 if command -v fzf >/dev/null 2>&1; then

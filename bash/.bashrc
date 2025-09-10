@@ -16,21 +16,22 @@ shopt -s histappend
 shopt -s checkwinsize
 
 # Enable color support
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
+#if [ -x /usr/bin/dircolors ]; then
+#    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+#    alias ls='ls --color=auto'
+#    alias grep='grep --color=auto'
+#    alias fgrep='fgrep --color=auto'
+#    alias egrep='egrep --color=auto'
+#fi
 
 # Some useful aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+#alias ll='ls -alF'
+#alias la='ls -A'
+#alias l='ls -CF'
 
 # Modern tool aliases
-    alias ls='eza --color=auto'
+alias ls="eza --long --color=always --icons=always --no-user -a -T -R -L=1" 
+
     alias ll='eza -la --color=auto --icons'
     alias la='eza -la --color=auto --icons'
     alias lt='eza --tree --color=auto --icons'
@@ -289,3 +290,10 @@ killp() {
 backup() {
     cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"
 }
+# bash-completion
+[[ -r /usr/share/bash-completion/bash_completion ]] && . /usr/share/bash-completion/bash_completion
+
+# fzf keybindings
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+#source -- ~/.local/share/blesh/ble.sh
