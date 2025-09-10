@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Simple setup script to copy dotfiles without installing tools
+# Simple setup script to install dotfiles using GNU Stow
 # Useful when you only want the configurations
 
 set -e
@@ -8,55 +8,59 @@ set -e
 # Colors for output
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
+RED='\033[0;31m'
 NC='\033[0m'
 
-echo -e "${BLUE}Setting up dotfiles...${NC}"
+echo -e "${BLUE}Setting up dotfiles with GNU Stow...${NC}"
 
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$SCRIPT_DIR/dotfiles"
 
-# Backup existing files
-backup_file() {
-    if [ -f "$1" ]; then
-        cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"
-        echo -e "${BLUE}Backed up existing $1${NC}"
-    fi
+# Check if stow is available
+if ! command -v stow >/dev/null 2>&1; then
+    echo -e "${RED}✗ GNU Stow is not installed${NC}"
+    echo -e "${BLUE}Please install stow first:${NC}"
+    echo -e "  sudo apt install stow   # On Ubuntu/Debian"
+    echo -e "  brew install stow       # On macOS"
+    exit 1
+fi
+
+# Check if dotfiles directory exists
+if [ ! -d "$DOTFILES_DIR" ]; then
+    echo -e "${RED}✗ Dotfiles directory not found: $DOTFILES_DIR${NC}"
+    exit 1
+fi
+
+# Change to dotfiles directory
+cd "$DOTFILES_DIR" || {
+    echo -e "${RED}✗ Could not change to dotfiles directory${NC}"
+    exit 1
 }
 
-# Copy dotfiles
-copy_dotfile() {
-    local src="$1"
-    local dest="$2"
+echo -e "${BLUE}Available packages:${NC}"
+ls -1 */
+
+echo
+
+# Stow all packages
+for package in */; do
+    package_name=${package%/}
+    echo -e "${BLUE}📦 Stowing package: $package_name${NC}"
     
-    if [ -f "$src" ]; then
-        backup_file "$dest"
-        cp "$src" "$dest"
-        echo -e "${GREEN}✓ Installed $dest${NC}"
+    # Remove trailing slash and stow the package
+    if stow -v "$package_name" -t "$HOME" 2>&1; then
+        echo -e "${GREEN}✓ Successfully stowed $package_name${NC}"
     else
-        echo -e "${BLUE}⚠ $src not found, skipping${NC}"
+        echo -e "${RED}✗ Failed to stow $package_name${NC}"
+        echo -e "${BLUE}  (This may be due to existing files - use 'stow -D $package_name' to unstow first)${NC}"
     fi
-}
-
-# Copy configurations
-copy_dotfile "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
-copy_dotfile "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
-copy_dotfile "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
-copy_dotfile "$DOTFILES_DIR/.tmux.conf" "$HOME/.tmux.conf"
-copy_dotfile "$DOTFILES_DIR/.gitignore_global" "$HOME/.gitignore_global"
-
-# Create .config directory if it doesn't exist
-mkdir -p "$HOME/.config"
-mkdir -p "$HOME/.config/atuin"
-mkdir -p "$HOME/.config/lazygit"
-mkdir -p "$HOME/.config/lazydocker"
-copy_dotfile "$DOTFILES_DIR/starship.toml" "$HOME/.config/starship.toml"
-copy_dotfile "$DOTFILES_DIR/fzf-config.sh" "$HOME/.config/fzf-config.sh"
-copy_dotfile "$DOTFILES_DIR/atuin-config.toml" "$HOME/.config/atuin/config.toml"
-copy_dotfile "$DOTFILES_DIR/lazygit-config.yml" "$HOME/.config/lazygit/config.yml"
-copy_dotfile "$DOTFILES_DIR/lazydocker-config.yml" "$HOME/.config/lazydocker/config.yml"
+    echo
+done
 
 echo -e "${GREEN}✓ Dotfiles setup complete!${NC}"
+echo -e "${BLUE}To unstow a package, run: stow -D <package-name> -t \$HOME${NC}"
+echo -e "${BLUE}To restow a package, run: stow -R <package-name> -t \$HOME${NC}"
 echo -e "${BLUE}Remember to:${NC}"
 echo -e "  1. Restart your shell or run: source ~/.bashrc"
 echo -e "  2. Update git config with your name and email"

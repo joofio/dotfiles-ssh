@@ -1,6 +1,6 @@
 # Dotfiles SSH
 
-A comprehensive dotfiles setup for Ubuntu servers with modern utility tools and configurations.
+A comprehensive dotfiles setup for Ubuntu servers with modern utility tools and configurations, managed with GNU Stow.
 
 ## Features
 
@@ -9,7 +9,9 @@ This repository provides:
 - **Shell Configuration**: Enhanced bash configuration with useful aliases and functions
 - **Git Configuration**: Optimized git settings and aliases
 - **Terminal Multiplexer**: Tmux configuration for better terminal management
-- **Cross-shell Prompt**: Starship prompt for a modern, informative shell experience
+- **Pure Prompt**: Clean and minimal Starship prompt inspired by Pure
+- **Neovim Configuration**: Modern Lua-based Neovim setup with essential configurations
+- **GNU Stow Management**: Symlink-based dotfiles management for easy maintenance
 
 ## Included Tools
 
@@ -36,6 +38,8 @@ This repository provides:
 - **ncdu** - Disk usage analyzer
 - **tldr** - Simplified man pages
 - **neofetch** - System information display
+- **stow** - GNU Stow for symlink-based dotfiles management
+- **neovim** - Modern text editor with Lua configuration
 
 ## Installation
 
@@ -84,17 +88,18 @@ The script will install the following tools and their dependencies:
 - Terminal utilities (vim, nano, htop, tree, etc.)
 
 ### Configuration Files
-The following dotfiles will be copied to your home directory:
+The following dotfiles will be symlinked to your home directory using GNU Stow:
 - `~/.bashrc` - Enhanced bash configuration with aliases and functions
 - `~/.zshrc` - Enhanced zsh configuration with aliases and functions
 - `~/.gitconfig` - Git configuration with useful aliases and enhanced delta settings
 - `~/.tmux.conf` - Tmux configuration for better terminal management
-- `~/.config/starship.toml` - Starship prompt configuration
+- `~/.config/starship.toml` - Pure-style Starship prompt configuration
 - `~/.gitignore_global` - Global gitignore patterns
 - `~/.config/atuin/config.toml` - Atuin configuration with sync disabled
 - `~/.config/fzf-config.sh` - FZF fuzzy finder configuration
 - `~/.config/lazygit/config.yml` - Lazygit TUI configuration
 - `~/.config/lazydocker/config.yml` - Lazydocker TUI configuration
+- `~/.config/nvim/init.lua` - Modern Neovim configuration with Lua
 
 ## Configuration Details
 
@@ -136,12 +141,39 @@ The following dotfiles will be copied to your home directory:
 - **Custom status bar**: Informative status line with time and date
 
 ### Starship Prompt
-- **Multi-line**: Clean two-line prompt layout
-- **Git integration**: Shows branch and status information
+- **Pure-style prompt**: Clean, minimal two-line prompt layout inspired by Pure
+- **Git integration**: Shows branch and status information with clean styling
 - **Language detection**: Displays current programming language versions
-- **SSH indicator**: Shows hostname when connected via SSH
+- **Command duration**: Shows execution time for long-running commands
+- **Optimized colors**: Carefully chosen colors for readability
 
 ## Customization
+
+### GNU Stow Management
+This repository uses GNU Stow for managing dotfiles through symlinks, making it easy to:
+- Install/uninstall specific configurations
+- Track changes in version control
+- Avoid conflicts with existing files
+- Maintain clean separation between different tools
+
+#### Managing Packages
+```bash
+# Install specific package
+cd dotfiles && stow <package-name> -t $HOME
+
+# Remove specific package
+cd dotfiles && stow -D <package-name> -t $HOME
+
+# Reinstall package (useful after updates)
+cd dotfiles && stow -R <package-name> -t $HOME
+```
+
+### Neovim Configuration
+The included Neovim configuration provides:
+- **Modern Lua setup**: Fast and extensible configuration
+- **Essential keybindings**: Space as leader key with intuitive mappings
+- **Smart defaults**: Line numbers, syntax highlighting, and proper indentation
+- **Cross-platform compatibility**: Works on all systems where Neovim is available
 
 ### Git Configuration
 Update the git configuration with your personal information:
