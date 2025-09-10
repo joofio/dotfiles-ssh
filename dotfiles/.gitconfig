@@ -1,0 +1,98 @@
+[user]
+	name = Your Name
+	email = your.email@example.com
+
+[core]
+	editor = vim
+	autocrlf = input
+	safecrlf = true
+	excludesfile = ~/.gitignore_global
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
+
+[push]
+	default = simple
+	autoSetupRemote = true
+
+[color]
+	ui = auto
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+
+[alias]
+	# Basic aliases
+	st = status -s
+	co = checkout
+	br = branch
+	ci = commit
+	ca = commit -a
+	cm = commit -m
+	cam = commit -am
+	
+	# Log aliases
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit
+	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	
+	# Diff aliases
+	dt = difftool
+	mt = mergetool
+	
+	# Stash aliases
+	sl = stash list
+	sa = stash apply
+	ss = stash save
+
+[diff]
+	tool = vimdiff
+	
+[merge]
+	tool = vimdiff
+
+# Delta configuration (if available)
+[core]
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	light = false
+	line-numbers = true
+	syntax-theme = Dracula
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	colorMoved = default
+
+[rerere]
+	enabled = true
+
+[help]
+	autocorrect = 1
