@@ -171,6 +171,16 @@ if command -v docker-compose >/dev/null 2>&1; then
     alias dcr='docker-compose restart'
 fi
 
+# Lazydocker alias (if lazydocker is available)
+if command -v lazydocker >/dev/null 2>&1; then
+    alias lzd='lazydocker'
+fi
+
+# Lazygit alias (if lazygit is available)
+if command -v lazygit >/dev/null 2>&1; then
+    alias lg='lazygit'
+fi
+
 # Safety aliases
 alias rm='rm -i'
 alias cp='cp -i'
@@ -247,6 +257,21 @@ fi
 # Initialize atuin if available
 if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init bash)"
+fi
+
+# Source fzf configuration if available
+if command -v fzf >/dev/null 2>&1; then
+    # Source fzf bash completion and key bindings
+    if [ -f /usr/share/bash-completion/completions/fzf ]; then
+        source /usr/share/bash-completion/completions/fzf
+    fi
+    if [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+        source /usr/share/doc/fzf/examples/key-bindings.bash
+    fi
+    # Source custom fzf configuration
+    if [ -f ~/.config/fzf-config.sh ]; then
+        source ~/.config/fzf-config.sh
+    fi
 fi
 
 # Custom functions

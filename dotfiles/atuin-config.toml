@@ -1,0 +1,181 @@
+# Atuin configuration file
+# https://docs.atuin.sh/configuration/config/
+
+## where to store your database, default is your system data directory
+## linux: ~/.local/share/atuin/history.db
+## macos: ~/Library/Application Support/atuin/history.db
+# db_path = "~/.local/share/atuin/history.db"
+
+## where to store your encryption key, default is your system data directory
+## linux: ~/.local/share/atuin/key
+## macos: ~/Library/Application Support/atuin/key
+# key_path = "~/.local/share/atuin/key"
+
+## where to store your auth session token, default is your system data directory
+## linux: ~/.local/share/atuin/session
+## macos: ~/Library/Application Support/atuin/session
+# session_path = "~/.local/share/atuin/session"
+
+## date format used, either "us" or "uk"
+dialect = "us"
+
+## enable or disable automatic sync
+auto_sync = false
+
+## enable or disable automatic update checks
+update_check = false
+
+## address of the sync server
+sync_address = "https://api.atuin.sh"
+
+## how often to sync history. note that this is only triggered when a command
+## is ran, so sync intervals may be longer
+## set it to 0 to sync after every command
+sync_frequency = "0"
+
+## which search mode to use
+## possible values: prefix, fulltext, fuzzy
+search_mode = "fuzzy"
+
+## which filter mode to use
+## possible values: global, host, session, directory
+filter_mode = "global"
+
+## With workspace filtering enabled, Atuin will filter for commands executed
+## in any directory that is a git repository and shares the same "workspace".
+## Workspace is defined as the git repository root that a directory (or parent directory) is in.
+workspaces = false
+
+## which filter mode to use when atuin is invoked from a shell up-key binding
+## the accepted values are identical to those of "filter_mode"
+## leave unspecified to use same mode set in "filter_mode"
+filter_mode_shell_up_key_binding = "session"
+
+## which search mode to use when atuin is invoked from a shell up-key binding
+## the accepted values are identical to those of "search_mode"
+## leave unspecified to use same mode set in "search_mode"
+search_mode_shell_up_key_binding = "prefix"
+
+## which style to use
+## possible values: auto, full, compact
+style = "auto"
+
+## the maximum number of lines the interface should take up
+## set it to 0 to always go full screen
+inline_height = 0
+
+## enable or disable showing a preview of the selected command
+## useful when the command is longer than the terminal width and is cut off
+show_preview = false
+
+## what to do when the escape key is pressed when searching
+## possible values: return-original, return-query
+exit_mode = "return-original"
+
+## possible values: emacs, subl
+word_jump_mode = "emacs"
+
+## characters that count as a part of a word
+word_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+## number of context lines to show when scrolling by pages
+scroll_context_lines = 1
+
+## use ctrl instead of alt as the shortcut modifier key for numerical UI shortcuts
+## alt-0 .. alt-9
+ctrl_n_shortcuts = false
+
+## default timeout for network requests in seconds (30s default)
+network_timeout = 30
+
+## default page size for sync requests
+sync_address_page_size = 100
+
+## enable or disable the local shell histoy (i.e. bash_history, zsh_history)
+## this will make sure to not record commands in shell history
+## note that this only works with bash and zsh, other shells will ignore this setting
+## possible values: true, false
+local_timeout = 5
+
+## history list format - type `atuin history -h` to see available options
+history_format = "{time}\t{command}\t{duration}"
+
+## prevent commands matching any of these regexes from being written to history.
+## Note that these regular expressions are unanchored, i.e. if they don't start
+## with ^ or end with $, they'll match anywhere in the command.
+## For details on the supported regular expression syntax, see
+## https://docs.rs/regex/latest/regex/#syntax
+history_filter = [
+    "^secret",
+    "^password"
+]
+
+## prevent commands run with cwd matching any of these regexes from being written
+## to history. Note that these regular expressions are unanchored, i.e. if they don't
+## start with ^ or end with $, they'll match anywhere in the cwd.
+## For details on the supported regular expression syntax, see
+## https://docs.rs/regex/latest/regex/#syntax
+cwd_filter = [
+    "^/tmp"
+]
+
+## Configure the maximum height of the preview to show.
+## Useful when you have long scripts in your history that you want to distinguish
+## by more than the first few characters.
+max_preview_height = 4
+
+## Configure whether or not to show the help row, which includes the current Atuin
+## version (and whether an update is available), a keymap hint, and the total
+## amount of commands in your history.
+show_help = true
+
+## Configure whether or not to show tabs for search and delete
+show_tabs = true
+
+## Invert the UI - put the search bar at the top, results below
+invert = false
+
+## enable or disable showing the current time when atuin finishes
+show_time = false
+
+## Timezone to use when displaying time
+## If not specified, the system timezone will be used
+## timezone = "America/New_York"
+
+## Enable or disable inline skipping using the configured keyword.
+## If enabled, any command prefixed with the keyword will not be recorded
+## in history.
+## This can be overridden by the ATUIN_HISTORY environment variable
+inline_skip = true
+
+## The keyword to use when inline skipping. The default is 'atuin'
+skip_keyword = " "
+
+## Configure the maximum length of commands to store in the database.
+## Defaults to 8192
+max_command_length = 8192
+
+## Configure the maximum length of directory names to store in the database.
+## Defaults to 2048
+max_directory_length = 2048
+
+## Enable or disable recording of command exit codes
+## Defaults to true
+record_exit_code = true
+
+## Set to true and Atuin will minimize motion in the TUI - timers will not update live, etc.
+## Useful for screen readers, or for those who find the live updating distracting.
+minimize_motion = false
+
+## Set the maximum number of (unicode) characters to show for a command in the search
+## results. If a command is longer than this, it will be truncated.
+## If not specified, this will default to the terminal width - 15.
+# max_command_width = 50
+
+## Configure the behavior of [PageUp] and [PageDown] when scrolling through results
+## 'page' will scroll up/down by one page worth of results
+## 'half-page' will scroll up/down by half a page worth of results
+page_mode = "page"
+
+## Enable or disable case sensitivity for search. Defaults to false (case insensitive)
+case_sensitive = false
