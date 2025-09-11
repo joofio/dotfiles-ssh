@@ -269,10 +269,10 @@ install_lazygit() {
     fi
     
     LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-    tar xf lazygit.tar.gz lazygit
-    sudo install lazygit /usr/local/bin
-    rm lazygit lazygit.tar.gz
+    curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+    tar -C /tmp -xf /tmp/lazygit.tar.gz lazygit
+    sudo install /tmp/lazygit /usr/local/bin
+    rm /tmp/lazygit /tmp/lazygit.tar.gz
     log_success "lazygit installed"
 }
 
@@ -284,7 +284,17 @@ install_lazydocker() {
         return
     fi
     
+    # Use temporary directory to avoid conflicts with existing lazydocker config directory
+    TEMP_DIR=$(mktemp -d)
+    cd "$TEMP_DIR" || {
+        log_error "Failed to create temporary directory"
+        return 1
+    }
+    
     curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+    
+    cd - > /dev/null
+    rm -rf "$TEMP_DIR"
     log_success "lazydocker installed"
 }
 
