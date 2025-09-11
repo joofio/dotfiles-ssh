@@ -15,7 +15,6 @@ echo -e "${BLUE}Setting up dotfiles with GNU Stow...${NC}"
 
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOTFILES_DIR="$SCRIPT_DIR/dotfiles"
 
 # Check if stow is available
 if ! command -v stow >/dev/null 2>&1; then
@@ -26,15 +25,15 @@ if ! command -v stow >/dev/null 2>&1; then
     exit 1
 fi
 
-# Check if dotfiles directory exists
-if [ ! -d "$DOTFILES_DIR" ]; then
-    echo -e "${RED}✗ Dotfiles directory not found: $DOTFILES_DIR${NC}"
+# Check if script directory exists
+if [ ! -d "$SCRIPT_DIR" ]; then
+    echo -e "${RED}✗ Script directory not found: $SCRIPT_DIR${NC}"
     exit 1
 fi
 
-# Change to dotfiles directory
-cd "$DOTFILES_DIR" || {
-    echo -e "${RED}✗ Could not change to dotfiles directory${NC}"
+# Change to script directory
+cd "$SCRIPT_DIR" || {
+    echo -e "${RED}✗ Could not change to script directory${NC}"
     exit 1
 }
 
@@ -46,6 +45,10 @@ echo
 # Stow all packages
 for package in */; do
     package_name=${package%/}
+    # Skip non-package directories
+    if [[ "$package_name" == ".git" ]]; then
+        continue
+    fi
     echo -e "${BLUE}📦 Stowing package: $package_name${NC}"
     
     # Remove trailing slash and stow the package
