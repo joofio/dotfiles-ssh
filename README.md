@@ -81,6 +81,51 @@ chmod +x setup-dotfiles.sh
 ./setup-dotfiles.sh
 ```
 
+## Conflict Handling
+
+Both installation scripts now include intelligent conflict detection and handling:
+
+### Automatic Conflict Detection
+- **Pre-flight checks**: Scripts scan for existing files that would conflict with stow operations
+- **Clear reporting**: Shows which packages have conflicts and which are clean
+- **No partial failures**: All conflicts are identified before any stowing begins
+
+### Interactive Resolution Options
+When conflicts are detected, you'll be presented with these options:
+
+- **Skip [s]**: Skip the conflicting package and continue with others
+- **Backup [b]**: Move existing files to `~/.dotfiles-backup/TIMESTAMP/` and proceed
+- **Overwrite [o]**: Remove existing files and proceed with stowing  
+- **Abort [a]**: Cancel the entire installation process
+
+### Backup System
+- Conflicting files are safely backed up to `~/.dotfiles-backup/` with timestamps
+- Original directory structure is preserved in backups
+- Easy to restore previous configurations if needed
+
+### Example Conflict Scenario
+```bash
+$ ./setup-dotfiles.sh
+
+[INFO] Checking for potential conflicts...
+[WARNING] Found conflicts in 2 package(s): bash git
+[INFO] Clean packages (9): atuin fzf lazydocker lazygit neofetch nvim starship tmux zsh
+
+[WARNING] Package 'bash' has conflicts with existing files:
+[WARNING]   - /home/user/.bashrc
+
+Choose an option:
+  [s] Skip this package
+  [b] Backup existing files and continue  
+  [o] Overwrite existing files
+  [a] Abort installation
+
+Your choice [s/b/o/a]: b
+[INFO] Backing up conflicting files...
+[SUCCESS] Backed up /home/user/.bashrc to /home/user/.dotfiles-backup/20240911_140530/.bashrc
+[SUCCESS] Successfully stowed bash
+```
+
 ## What Gets Installed
 
 ### System Packages
@@ -169,7 +214,12 @@ cd dotfiles && stow -D <package-name> -t $HOME
 
 # Reinstall package (useful after updates)
 cd dotfiles && stow -R <package-name> -t $HOME
+
+# Check for conflicts before stowing
+cd dotfiles && stow -n <package-name> -t $HOME
 ```
+
+**Note**: The installation scripts now automatically handle conflicts, but you can still use these commands for manual management.
 
 ### Neovim Configuration
 The included Neovim configuration provides:
