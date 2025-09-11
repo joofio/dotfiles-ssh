@@ -151,7 +151,7 @@ install_atuin() {
         return
     fi
     
-    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+    sudo snap install atuin
     log_success "atuin installed"
 }
 
@@ -298,7 +298,7 @@ install_lazydocker() {
     log_success "lazydocker installed"
 }
 
-# Install nvim (neovim) via snap
+# Install nvim (neovim) via pre-built archive
 install_nvim() {
     log_info "Installing nvim (neovim)..."
     if command -v nvim >/dev/null 2>&1; then
@@ -306,8 +306,11 @@ install_nvim() {
         return
     fi
     
-    # Install nvim via snap
-    sudo snap install nvim --classic
+    # Download and install nvim using pre-built archive (recommended method from INSTALL.md)
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    sudo rm -rf /opt/nvim
+    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+    rm nvim-linux-x86_64.tar.gz
     log_success "nvim installed"
 }
 

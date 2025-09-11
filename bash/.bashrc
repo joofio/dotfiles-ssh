@@ -223,6 +223,11 @@ if [ -d "$HOME/.cargo/bin" ] ; then
     PATH="$HOME/.cargo/bin:$PATH"
 fi
 
+# Add /opt/nvim-linux-x86_64/bin to PATH if it exists (for Neovim)
+if [ -d "/opt/nvim-linux-x86_64/bin" ] ; then
+    PATH="/opt/nvim-linux-x86_64/bin:$PATH"
+fi
+
 # Initialize zoxide if available
 if command -v zoxide >/dev/null 2>&1; then
     eval "$(zoxide init bash)"
