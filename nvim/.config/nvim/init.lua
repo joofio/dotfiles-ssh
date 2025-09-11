@@ -1,6 +1,29 @@
 -- Neovim Configuration
 -- Modern Lua-based configuration with essential settings
 
+-- Compatibility layer for older Neovim versions
+if vim.keymap == nil then
+  vim.keymap = {}
+  vim.keymap.set = function(mode, lhs, rhs, opts)
+    opts = opts or {}
+    local options = {
+      noremap = opts.noremap ~= false,
+      silent = opts.silent == true,
+    }
+    -- Convert function to string if needed
+    if type(rhs) == "function" then
+      error("Function keymaps not supported in compatibility mode")
+    end
+    if type(mode) == "table" then
+      for _, m in ipairs(mode) do
+        vim.api.nvim_set_keymap(m, lhs, rhs, options)
+      end
+    else
+      vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+    end
+  end
+end
+
 -- Basic settings
 vim.opt.number = true           -- Show line numbers
 vim.opt.relativenumber = true   -- Show relative line numbers
