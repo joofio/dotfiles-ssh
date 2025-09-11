@@ -298,6 +298,19 @@ install_lazydocker() {
     log_success "lazydocker installed"
 }
 
+# Install nvim (neovim) via snap
+install_nvim() {
+    log_info "Installing nvim (neovim)..."
+    if command -v nvim >/dev/null 2>&1; then
+        log_warning "nvim is already installed"
+        return
+    fi
+    
+    # Install nvim via snap
+    sudo snap install nvim --classic
+    log_success "nvim installed"
+}
+
 # Install additional useful tools
 install_additional_tools() {
     log_info "Installing additional useful tools..."
@@ -307,7 +320,6 @@ install_additional_tools() {
         ncdu \
         tldr \
         neofetch \
-        nvim \
         curl \
         wget \
         zip \
@@ -424,6 +436,7 @@ main() {
     install_fzf
     install_lazygit
     install_lazydocker
+    install_nvim
     install_additional_tools
     
     setup_dotfiles
