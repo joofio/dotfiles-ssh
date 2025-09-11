@@ -56,8 +56,7 @@ if command -v starship >/dev/null 2>&1; then
     eval "$(starship init zsh)"
 fi
 
-# Initialize atuin if available
-    eval "$(atuin init zsh)"
+
 
 # Source fzf configuration if available
 if command -v fzf >/dev/null 2>&1; then
@@ -111,3 +110,6 @@ killp() {
 backup() {
     cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"
 }
+
+# Initialize atuin if available
+    eval "$(atuin init zsh)"
