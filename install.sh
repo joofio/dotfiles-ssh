@@ -155,6 +155,18 @@ install_atuin() {
     log_success "atuin installed"
 }
 
+# Install zsh
+install_zsh() {
+    log_info "Installing zsh..."
+    if command -v zsh >/dev/null 2>&1; then
+        log_warning "zsh is already installed"
+        return
+    fi
+    
+    sudo apt install -y zsh
+    log_success "zsh installed"
+}
+
 # Install tmux
 install_tmux() {
     log_info "Installing tmux..."
@@ -308,7 +320,6 @@ setup_dotfiles() {
     
     # Get the directory where this script is located
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    DOTFILES_DIR="$SCRIPT_DIR/dotfiles"
     
     # Check if stow is available
     if ! command -v stow >/dev/null 2>&1; then
@@ -316,15 +327,20 @@ setup_dotfiles() {
         exit 1
     fi
     
-    # Change to dotfiles directory
-    cd "$DOTFILES_DIR" || {
-        log_error "Could not change to dotfiles directory: $DOTFILES_DIR"
+    # Change to script directory
+    cd "$SCRIPT_DIR" || {
+        log_error "Could not change to script directory: $SCRIPT_DIR"
         exit 1
     }
     
     # Stow all packages
     for package in */; do
         package_name=${package%/}
+        # Skip non-package directories
+        if [[ "$package_name" == ".git" ]]; then
+            continue
+        fi
+        
         log_info "Stowing package: $package_name"
         
         # Remove trailing slash and stow the package
@@ -336,6 +352,42 @@ setup_dotfiles() {
     done
     
     log_success "Dotfiles setup with stow completed"
+}
+
+# Set zsh as default shell
+set_default_shell() {
+    log_info "Setting zsh as default shell..."
+    
+    # Check if zsh is installed
+    if ! command -v zsh >/dev/null 2>&1; then
+        log_error "zsh is not installed. Cannot set as default shell."
+        return 1
+    fi
+    
+    # Get zsh path
+    ZSH_PATH=$(which zsh)
+    
+    # Check if zsh is already the default shell
+    if [[ "$SHELL" == "$ZSH_PATH" ]]; then
+        log_warning "zsh is already the default shell"
+        return
+    fi
+    
+    # Check if zsh is in /etc/shells
+    if ! grep -q "$ZSH_PATH" /etc/shells; then
+        log_info "Adding zsh to /etc/shells..."
+        echo "$ZSH_PATH" | sudo tee -a /etc/shells
+    fi
+    
+    # Change default shell to zsh
+    log_info "Changing default shell to zsh..."
+    if sudo chsh -s "$ZSH_PATH" "$USER"; then
+        log_success "Default shell changed to zsh"
+        log_info "Please log out and log back in for the change to take effect"
+    else
+        log_error "Failed to change default shell to zsh"
+        return 1
+    fi
 }
 
 # Main installation function
@@ -353,6 +405,7 @@ main() {
     install_zoxide
     install_starship
     install_atuin
+    install_zsh
     install_tmux
     install_btop
     install_dust
@@ -365,8 +418,10 @@ main() {
     
     setup_dotfiles
     
+    set_default_shell
+    
     log_success "Installation completed successfully!"
-    log_info "Please restart your shell or run 'source ~/.bashrc' to apply changes"
+    log_info "Please restart your shell or run 'source ~/.zshrc' to apply changes"
     log_info "You may need to run 'atuin register' to set up shell history sync"
 }
 

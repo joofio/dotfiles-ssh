@@ -6,7 +6,7 @@ A comprehensive dotfiles setup for Ubuntu servers with modern utility tools and 
 
 This repository provides:
 - **Modern CLI Tools**: Replacements for traditional Unix tools with better features
-- **Shell Configuration**: Enhanced bash configuration with useful aliases and functions
+- **Shell Configuration**: Enhanced zsh configuration with useful aliases and functions (zsh is set as default shell)
 - **Git Configuration**: Optimized git settings and aliases
 - **Terminal Multiplexer**: Tmux configuration for better terminal management
 - **Pure Prompt**: Clean and minimal Starship prompt inspired by Pure
@@ -65,8 +65,10 @@ chmod +x install.sh
 
 3. Restart your shell or source the new configuration:
 ```bash
-source ~/.bashrc
-# or for zsh users
+# The script will set zsh as your default shell
+# You can start zsh immediately with:
+zsh
+# or source the new zsh configuration:
 source ~/.zshrc
 ```
 
@@ -89,8 +91,8 @@ The script will install the following tools and their dependencies:
 
 ### Configuration Files
 The following dotfiles will be symlinked to your home directory using GNU Stow:
-- `~/.bashrc` - Enhanced bash configuration with aliases and functions
-- `~/.zshrc` - Enhanced zsh configuration with aliases and functions
+- `~/.zshrc` - Enhanced zsh configuration with aliases and functions (default shell)
+- `~/.bashrc` - Enhanced bash configuration with aliases and functions (for compatibility)
 - `~/.gitconfig` - Git configuration with useful aliases and enhanced delta settings
 - `~/.tmux.conf` - Tmux configuration for better terminal management
 - `~/.config/starship.toml` - Pure-style Starship prompt configuration
@@ -103,11 +105,12 @@ The following dotfiles will be symlinked to your home directory using GNU Stow:
 
 ## Configuration Details
 
-### Bash Configuration
-- **History**: Extended history with 10,000 entries
+### Shell Configuration
+- **History**: Extended history with 20,000 entries for zsh, 10,000 for bash
 - **Aliases**: Modern tool aliases (e.g., `ls` → `eza`, `cat` → `bat`)
 - **Functions**: Useful functions for extracting archives, creating directories, etc.
 - **Path**: Automatically adds `~/.local/bin` and `~/.cargo/bin` to PATH
+- **Default Shell**: zsh is automatically set as the default shell during installation
 
 ### Git Configuration
 - **Delta Integration**: Advanced diff visualization with syntax highlighting
@@ -224,7 +227,8 @@ After installation, you may want to:
 
 This setup is designed for:
 - Ubuntu 18.04 LTS and newer
-- Bash and Zsh shells
+- Zsh as the default shell (automatically installed and configured)
+- Bash shell support for compatibility
 - SSH server environments
 
 ## Contributing
