@@ -3,7 +3,8 @@
 
 # Modern tool aliases
 #alias ls='eza --color=auto'
-alias ls="eza --long --color=always --icons=always --no-user -a -T -R -L=1" 
+alias ls="eza --long --color=always --icons=always --no-user -a -T -R -L=0" 
+alias lst="eza --long --color=always --icons=always --no-user -a -T -R -L=1" 
 
 alias ll='eza -la --color=auto --icons'
 alias la='eza -la --color=auto --icons'
